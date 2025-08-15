@@ -21,7 +21,7 @@ main {
     min-height: 100vh;
     height: 100vh;
     width: 100%;
-    background-image: url('/背景.jpg');
+    background-image: url('背景.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -260,17 +260,7 @@ main>section.active {
 /* 星エフェクトの基本設定 */
 
 
-@keyframes shoot {
-    0% {
-        transform: translate(0, 0);
-        opacity: 1;
-    }
 
-    100% {
-        transform: translate(200px, 100px);
-        opacity: 0;
-    }
-}
 
 
 /* しおりカード：背景にフレーム画像を使い、オーバーレイで可読性を確保 */
