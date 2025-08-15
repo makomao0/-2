@@ -1127,26 +1127,17 @@ button[data-filter="all"] {
     .magic-container .calendar-grid {
         grid-template-columns: repeat(7, 1fr);
         gap: 1px;
-        padding: 0.1rem;
-        max-width: 98vw;
+
+
         margin: 0 auto;
     }
 
     .calendar-cell,
     .magic-container .calendar-cell {
-        width: 24px;
-        height: 24px;
-        font-size: 0.6rem;
-        padding: 0;
+        width: 100%;
     }
 
-    .magic-container {
-        padding: 0.5rem 0.1rem;
-        /* max-width: 100vw; ← これも削除 */
-        width: 100%;
-        box-sizing: border-box;
-        margin: 1rem auto;
-    }
+
 }
 
 /* しおりページのグリッドを1列・2列に */
@@ -1230,18 +1221,7 @@ button[data-filter="all"] {
 }
 
 /* ナビゲーションバーのレスポンシブ */
-@media (max-width: 500px) {
-    .nav {
-        flex-direction: column;
-        gap: 0.2rem;
-        font-size: 0.95rem;
-        padding: 0.3rem 0;
-    }
 
-    .nav a {
-        padding: 0.2rem 0;
-    }
-}
 
 /* 入力欄のレスポンシブ */
 @media (max-width: 500px) {
