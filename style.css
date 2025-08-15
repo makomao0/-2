@@ -1,0 +1,1254 @@
+:root {
+    /* ダークテーマの基調色とアクセント色を定義 */
+    --dark-bg: #0f0a18;
+    --gold: #d4af37;
+    --light-bg: rgba(255, 255, 255, 0.07);
+    --panel-bg: rgba(15, 10, 24, 0.6);
+}
+
+body {
+    font-family: 'Yu Mincho', serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--dark-bg);
+    color: #000000;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    /* ←追加：縦スクロールも基本非表示 */
+}
+
+main {
+    min-height: 100vh;
+    height: 100vh;
+    width: 100%;
+    background-image: url('img/背景.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-sizing: border-box;
+    padding-bottom: 0;
+    overflow: hidden;
+    /* ←追加 */
+    display: flex;
+    flex-direction: column;
+}
+
+/* カレンダー・しおり・おすすめページはナビ分引いた高さに */
+.calendar-page,
+.bookmark-page,
+.recommend-page {
+    min-height: calc(100vh - 64px);
+    /* navの高さ分だけ縮める */
+    height: calc(100vh - 64px);
+    overflow: auto;
+    /* これで中身が多くてもページ全体はスクロールしない */
+}
+
+/* マイページだけはスクロール可 */
+.mypage-page {
+    min-height: 0;
+    height: auto;
+    overflow: auto;
+}
+
+h2 {
+    color: #ffffff;
+}
+
+header {
+    text-align: center;
+    font-size: 1.25rem;
+    letter-spacing: 0.05em;
+    font-weight: bold;
+    position: relative;
+    z-index: 2;
+}
+
+.calendar-page {
+    /* 背景画像・色は削除 */
+    min-height: calc(100vh - 64px);
+    /* navの高さ分だけ縮める */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 0;
+    /* background-color: var(--dark-bg); ←削除 */
+    /* background-image: ... ←削除 */
+}
+
+main>.calendar-page>* {
+    position: relative;
+    z-index: 1;
+}
+
+
+/* --- 月切り替えボタン：シャープ＆クールに（シンプル・高級感なし・押したら元に戻る・シャドウなし・グラデなし） --- */
+.month-switch button {
+    background: #00000028;
+    color: #ffe97f;
+    border: 2px solid #ffe97f;
+    border-radius: 0;
+    padding: 0.6em 2.5em;
+    font-size: 1.1rem;
+    font-weight: bold;
+    box-shadow: none;
+    cursor: pointer;
+    margin: 0 0.5em;
+    transition: background 0.18s, color 0.18s, border-color 0.18s, transform 0.15s;
+    outline: none;
+    letter-spacing: 0.09em;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7em;
+    position: relative;
+    overflow: hidden;
+}
+
+.month-switch button::before {
+    display: none;
+}
+
+.month-switch button span {
+    position: relative;
+    z-index: 1;
+}
+
+
+
+.month-switch button:active {
+    /* 押したら元の形に戻る */
+    transform: scale(1.0);
+    border-bottom: 4px
+}
+
+.calendar-page h1 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    /* 既存のスタイルも維持 */
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.month-switch {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+main>section {
+    padding: 1rem;
+    margin-bottom: 5rem;
+    /* フェードイン効果用 */
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+main>section.active {
+    opacity: 1;
+}
+
+
+
+/* しおり・マイページ・おすすめを画面いっぱいに固定 */
+.bookmark-page,
+.mypage-page,
+.recommend-page {
+    top: 0;
+    left: 0;
+    width: auto;
+    height: 100vw;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    box-sizing: border-box;
+}
+
+/* ファイル管理コンポーネント */
+.file-manager {
+    text-align: center;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.file-manager input {
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    background: rgba(255, 255, 255, 0.9);
+    color: #000;
+}
+
+.file-manager button {
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    border: none;
+    background: var(--gold);
+    color: #0f0a18;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.3s ease;
+    margin-bottom: 0.5rem;
+}
+
+.file-manager button:hover {
+    opacity: 0.9;
+}
+
+/* ファイル一覧を目次風にデザイン */
+.file-manager #file-list {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    max-width: 220px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.file-manager #file-list button {
+    width: 100%;
+    padding: 0.5rem 0.8rem 0.5rem 1.6rem;
+    border-radius: 8px;
+    border: 1px solid var(--gold);
+    background: rgba(0, 0, 0, 0.4);
+    color: var(--gold);
+    font-size: 0.9rem;
+    text-align: left;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.file-manager #file-list button::before {
+    content: '📖';
+    position: absolute;
+    left: 0.4rem;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.file-manager #file-list button:hover {
+    background: rgba(0, 0, 0, 0.6);
+    color: #ffe97f;
+}
+
+/* 星エフェクトの基本設定 */
+.shooting-star {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 2px;
+    background: #ffd700;
+    border-radius: 50%;
+    box-shadow: 0 0 6px #ffd700, 0 0 12px #ffd700;
+    animation: shoot 1.5s linear forwards;
+    z-index: 10000;
+}
+
+@keyframes shoot {
+    0% {
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(200px, 100px);
+        opacity: 0;
+    }
+}
+
+
+/* しおりカード：背景にフレーム画像を使い、オーバーレイで可読性を確保 */
+#bookmark-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    max-width: 900px;
+    margin: 2rem auto 0 auto;
+    padding: 0;
+}
+
+.bookmark-card {
+    background-image: url('img/bookmark_frame.png');
+    background-size: cover;
+    background-position: center;
+    border: 2px solid var(--gold);
+    border-radius: 14px;
+    padding: 1.2rem 1rem 1rem 1rem;
+    cursor: pointer;
+    transition: transform 0.22s cubic-bezier(.68, -0.55, .27, 1.55), box-shadow 0.22s;
+    box-shadow: 0 2px 10px #ffe97f22;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 260px;
+    position: relative;
+    overflow: hidden;
+    color: #fff;
+}
+
+/* 半透明オーバーレイ */
+.bookmark-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 0;
+}
+
+/* カード内の要素をオーバーレイの上に表示 */
+.bookmark-card>* {
+    position: relative;
+    z-index: 1;
+}
+
+.bookmark-card:hover {
+    transform: translateY(-8px) scale(1.03) rotate(-1deg);
+    box-shadow: 0 8px 24px #ffe97f55;
+    z-index: 2;
+}
+
+/* スタンプ別のオーバーレイ色 */
+.bookmark-card.heart::before {
+    background: rgba(255, 229, 236, 0.35);
+}
+
+.bookmark-card.cry::before {
+    background: rgba(224, 247, 250, 0.35);
+}
+
+.bookmark-card.tears::before {
+    background: rgba(227, 242, 253, 0.35);
+}
+
+.bookmark-card.surprise::before {
+    background: rgba(255, 243, 224, 0.35);
+}
+
+.bookmark-card.sleepy::before {
+    background: rgba(243, 229, 245, 0.35);
+}
+
+/* カード内テキスト設定 */
+.bookmark-card h4 {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 0.3em;
+    text-align: center;
+}
+
+.bookmark-card p {
+    font-size: 0.9rem;
+    margin: 0.2em 0;
+    color: #ddd;
+}
+
+/* ナビゲーションバー */
+.nav {
+    width: 100%;
+    /* 100vw→100%に修正 */
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 1rem 0.5rem;
+    background: var(--panel-bg);
+    border-top: 1px solid var(--gold);
+    position: fixed;
+    bottom: 0;
+    margin: 0;
+    box-sizing: border-box;
+    z-index: 1000;
+}
+
+.nav a {
+    text-decoration: none;
+    color: var(--gold);
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    transition: color 0.3s ease;
+}
+
+.nav a:hover {
+    color: #ffffff;
+}
+
+/* 時刻表示 */
+#datetime {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 1001;
+    text-align: right;
+    font-size: 1.1rem;
+    color: #222;
+    letter-spacing: 0.05em;
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 6px;
+    padding: 0.2em 1.2em;
+    min-width: 210px;
+}
+
+#book-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+}
+
+.book-card-inner {
+    text-align: center;
+    background: #fff;
+    padding: 2rem;
+    border-radius: 14px;
+    border: 1px solid #ccc;
+    max-width: 600px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.book-card-inner img {
+    margin-top: 1rem;
+    border-radius: 8px;
+}
+
+.book-card-inner h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: #ffffff;
+}
+
+.book-card-inner p {
+    font-size: 1rem;
+    line-height: 1.7;
+    margin: 0.5rem 0;
+}
+
+
+.book-card-inner a {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5em 1.2em;
+    background-color: #d4af37;
+    color: #fff;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.book-card-inner a:hover {
+    background-color: #b8965a;
+}
+
+
+#sns-share button {
+    margin: 0.2rem;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 6px;
+    background-color: #264653;
+    color: white;
+    cursor: pointer;
+}
+
+#sns-share button:hover {
+    opacity: 0.9;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    padding: 1rem;
+    max-width: 700px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.322);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.664);
+}
+
+.calendar-cell {
+    border: 1px solid #744e4e;
+    border-radius: 6px;
+    background: #ffffffc5;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.calendar-cell.highlight {
+    outline: 3px solid #e76f51;
+    z-index: 2;
+    transition: outline 0.3s;
+}
+
+.day-number {
+    position: absolute;
+    top: 4px;
+    left: 6px;
+    font-size: 0.8rem;
+    color: #000000;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes modalFadeOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+}
+
+#mood-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    gap: 20px;
+}
+
+.modal-content {
+    max-height: 600px;
+    margin-bottom: 4%;
+    background: #fffdf6;
+    border: 2px dashed #AD8D73;
+    border-radius: 12px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.3s, transform 0.3s;
+
+}
+
+.modal-content h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.modal-content input,
+.modal-content textarea {
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.stamp img {
+    width: 50px;
+    height: auto;
+    padding-top: 5%;
+    padding-left: 10%;
+}
+
+.stamp {
+    cursor: pointer;
+    margin: 5px;
+    display: inline-block;
+    font-size: 1.5rem;
+}
+
+.stamp.selected {
+    width: 70px;
+    height: 70px;
+    align-items: center;
+    text-align: center;
+    border: 2px solid #264653;
+    border-radius: 50%;
+    padding: 2px;
+
+}
+
+.filter-buttons {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.filter-buttons button {
+    margin: 0.2rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.status-select-p {
+    display: flex;
+}
+
+.status-select-p label {
+    margin-top: 3.3%;
+    margin-left: 5%;
+}
+
+.filter-buttons button:hover {
+    transform: scale(1.05);
+}
+
+button[data-filter="読了"] {
+    background: #2a9d8f;
+    color: #fff;
+}
+
+button[data-filter="未読"] {
+    background: #e76f51;
+    color: #fff;
+}
+
+button[data-filter="favorite"] {
+    background: #f4a261;
+    color: #fff;
+}
+
+button[data-filter="💘"] {
+    background: #ffb3c1;
+    color: #fff;
+}
+
+button[data-filter="😭"] {
+    background: #80deea;
+    color: #fff;
+}
+
+button[data-filter="💧"] {
+    background: #90caf9;
+    color: #fff;
+}
+
+button[data-filter="😲"] {
+    background: #ffcc80;
+    color: #fff;
+}
+
+button[data-filter="😴"] {
+    background: #ce93d8;
+    color: #fff;
+}
+
+button[data-filter="all"] {
+    background: #264653;
+    color: #fff;
+}
+
+.form-buttons {
+    text-align: center;
+}
+
+.submit-btn,
+.delete-btn,
+.close-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    margin: 0.5rem;
+}
+
+.submit-btn {
+    background: #264653;
+    color: white;
+}
+
+.delete-btn {
+    background: #b83b5e;
+    color: white;
+}
+
+.close-btn {
+    background: transparent;
+    color: #333;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+    border: none;
+}
+
+/* --- しおりページ：Pinterest風3列グリッド --- */
+#bookmark-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    max-width: 900px;
+    margin: 2rem auto 0 auto;
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+}
+
+.bookmark-card {
+    background: #fff;
+    border: 1.5px solid #ccc;
+    border-radius: 14px;
+    padding: 1.2rem 1rem 1rem 1rem;
+    margin: 0;
+    cursor: pointer;
+    transition: transform 0.22s cubic-bezier(.68, -0.55, .27, 1.55), box-shadow 0.22s;
+    box-shadow: 0 2px 10px #ffe97f22;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 260px;
+    position: relative;
+    overflow: hidden;
+}
+
+.bookmark-card:hover {
+    transform: translateY(-8px) scale(1.03) rotate(-1deg);
+    box-shadow: 0 8px 24px #ffe97f55;
+    z-index: 2;
+}
+
+.bookmark-card img {
+    width: 100%;
+    max-width: 120px;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 0.7em;
+    box-shadow: 0 2px 8px #ccc3;
+    object-fit: cover;
+}
+
+.bookmark-card .card-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 0.3em;
+    text-align: center;
+}
+
+.bookmark-card .card-emotion {
+    font-size: 1.5rem;
+    margin-bottom: 0.2em;
+}
+
+.bookmark-card .card-memo {
+    font-size: 0.97rem;
+    color: #444;
+    margin-top: 0.5em;
+    text-align: center;
+    word-break: break-all;
+}
+
+.bookmark-card .card-tags {
+    margin-top: 0.5em;
+    font-size: 0.85rem;
+    color: #888;
+    text-align: center;
+}
+
+.bookmark-card.heart {
+    background: #ffe5ec;
+}
+
+.bookmark-card.cry {
+    background: #e0f7fa;
+}
+
+.bookmark-card.tears {
+    background: #e3f2fd;
+}
+
+.bookmark-card.surprise {
+    background: #fff3e0;
+}
+
+.bookmark-card.sleepy {
+    background: #f3e5f5;
+}
+
+/* ナビゲーションバーをダークテーマに */
+.nav {
+    width: 100%;
+    /* 100vw→100%に修正 */
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 1rem 0.5rem;
+    background: var(--panel-bg);
+    border-top: 1px solid var(--gold);
+    position: fixed;
+    bottom: 0;
+    margin: 0;
+    box-sizing: border-box;
+    z-index: 1000;
+}
+
+.nav a {
+    text-decoration: none;
+    color: var(--gold);
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    transition: color 0.3s ease;
+}
+
+.nav a:hover {
+    color: #ffffff;
+}
+
+#datetime {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    left: auto;
+    z-index: 1001;
+    text-align: right;
+    font-size: 1.1rem;
+    color: #222;
+    letter-spacing: 0.05em;
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 6px;
+    display: inline-block;
+    padding: 0.2em 1.2em;
+    margin: 0;
+    min-width: 210px;
+    box-sizing: border-box;
+}
+
+/* 魔法学校風装飾コンテナとカレンダーセルのスタイル */
+.magic-container {
+    background: var(--panel-bg);
+    border: 2px solid var(--gold);
+    border-radius: 16px;
+    padding: 1rem 2.5rem;
+    max-width: 700px;
+    width: 100%;
+    margin: 1.5rem auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.6), 0 0 15px var(--gold);
+    backdrop-filter: blur(4px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* 子要素を中央寄せ */
+}
+
+.magic-title {
+    color: var(--gold);
+    font-family: 'Yu Mincho', serif;
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    position: relative;
+    letter-spacing: 0.05em;
+}
+
+.magic-title::before,
+.magic-title::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 120px;
+    height: 1px;
+    background: var(--gold);
+}
+
+.magic-title::before {
+    left: 0;
+}
+
+.magic-title::after {
+    right: 0;
+}
+
+.magic-title span {
+    padding: 0 0.5rem;
+    background: var(--panel-bg);
+    position: relative;
+    z-index: 1;
+}
+
+.magic-container .month-switch {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.magic-container .month-switch button {
+    background: transparent;
+    border: 2px solid var(--gold);
+    color: var(--gold);
+    padding: 0.5rem 1.8rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.3s ease, background 0.3s ease;
+}
+
+.magic-container .month-switch button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+    z-index: -1;
+}
+
+.magic-container .month-switch button:hover {
+    color: white;
+}
+
+.magic-container .month-switch button:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+.magic-container .calendar-grid {
+    background: var(--light-bg);
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+    max-width: 700px;
+    /* magic-containerと同じ幅 */
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    width: 100%;
+}
+
+.magic-container .calendar-cell {
+    background: rgba(15, 10, 24, 0.85);
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    width: 100%;
+    /* 親グリッドの幅に合わせる */
+    aspect-ratio: 1 / 1;
+    /* 正方形にする */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    min-width: 0;
+    min-height: 0;
+    box-sizing: border-box;
+}
+
+.magic-container .calendar-cell:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+}
+
+.magic-container .day-number {
+    position: absolute;
+    top: 4px;
+    left: 6px;
+    font-size: 0.8rem;
+    color: var(--gold);
+}
+
+.magic-container .calendar-cell.highlight {
+    outline: 3px solid #e76f51;
+    z-index: 2;
+    transition: outline 0.3s ease;
+}
+
+
+.recommend-section {
+    text-align: center;
+}
+
+.recommend-card {
+    max-width: 640px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+    text-align: center;
+    animation: fadeInSummon 1s ease-out forwards;
+    transform: scale(0.8);
+    opacity: 0;
+}
+
+@keyframes fadeInSummon {
+    0% {
+        opacity: 0;
+        transform: scale(0.6) rotate(-3deg) translateY(20px);
+        filter: blur(4px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg) translateY(0);
+        filter: blur(0);
+    }
+}
+
+.recommend-card img {
+    width: 120px;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+    margin-bottom: 1rem;
+}
+
+.recommend-card h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2d1d00;
+    margin-bottom: 0.5rem;
+}
+
+.recommend-card p {
+    color: #333;
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.recommend-card a {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5rem 1.2rem;
+    background: #d4af37;
+    color: #000;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* --- レスポンシブデザイン対応 --- */
+
+/* カレンダーグリッドのレスポンシブ */
+@media (max-width: 900px) {
+
+    .calendar-grid,
+    .magic-container .calendar-grid {
+        max-width: 100vw;
+        padding: 0rem;
+        grid-template-columns: repeat(7, 1fr);
+        margin: 0 auto;
+    }
+
+    .magic-container {
+        padding: 1rem 1rem;
+        width: 100%;
+        box-sizing: border-box;
+        margin: 1.5rem auto;
+    }
+}
+
+@media (max-width: 700px) {
+
+    .calendar-grid,
+    .magic-container .calendar-grid {
+        grid-template-columns: repeat(7, 1fr);
+        gap: 1px;
+
+        max-width: 100vw;
+        margin: 0 auto;
+    }
+
+    .magic-title {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 500px) {
+
+    .calendar-grid,
+    .magic-container .calendar-grid {
+        grid-template-columns: repeat(7, 1fr);
+        gap: 1px;
+        padding: 0.1rem;
+        max-width: 98vw;
+        margin: 0 auto;
+    }
+
+    .calendar-cell,
+    .magic-container .calendar-cell {
+        width: 24px;
+        height: 24px;
+        font-size: 0.6rem;
+        padding: 0;
+    }
+
+    .magic-container {
+        padding: 0.5rem 0.1rem;
+        /* max-width: 100vw; ← これも削除 */
+        width: 100%;
+        box-sizing: border-box;
+        margin: 1rem auto;
+    }
+}
+
+/* しおりページのグリッドを1列・2列に */
+@media (max-width: 900px) {
+    #bookmark-list {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        max-width: 98vw;
+    }
+}
+
+@media (max-width: 600px) {
+    #bookmark-list {
+        grid-template-columns: 1fr;
+        gap: 0.7rem;
+        max-width: 99vw;
+    }
+
+    .bookmark-card {
+        min-height: 180px;
+        padding: 0.7rem 0.5rem 0.5rem 0.5rem;
+    }
+}
+
+/* モーダルのレスポンシブ */
+@media (max-width: 500px) {
+    .modal-content {
+        padding: 0.4rem;
+        max-width: 99vw;
+        font-size: 0.9rem;
+    }
+
+    .form-buttons button,
+    .submit-btn,
+    .delete-btn,
+    .close-btn {
+        font-size: 0.9rem;
+        padding: 0.3rem 0.7rem;
+    }
+}
+
+/* スタンプ画像のサイズ調整 */
+@media (max-width: 500px) {
+    .stamp img {
+        width: 32px;
+        height: auto;
+        padding-top: 2%;
+        padding-left: 2%;
+    }
+
+    .stamp.selected {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* 推薦カードのレスポンシブ */
+@media (max-width: 600px) {
+    .recommend-card {
+        padding: 1rem;
+        max-width: 98vw;
+        font-size: 0.95rem;
+    }
+
+    .recommend-card img {
+        width: 80px;
+    }
+}
+
+/* ファイルマネージャーのレスポンシブ */
+@media (max-width: 600px) {
+    .file-manager {
+        max-width: 98vw;
+        padding: 0.5rem;
+    }
+
+    .file-manager #file-list {
+        max-width: 95vw;
+        padding: 0.5rem;
+    }
+}
+
+/* ナビゲーションバーのレスポンシブ */
+@media (max-width: 500px) {
+    .nav {
+        flex-direction: column;
+        gap: 0.2rem;
+        font-size: 0.95rem;
+        padding: 0.3rem 0;
+    }
+
+    .nav a {
+        padding: 0.2rem 0;
+    }
+}
+
+/* 入力欄のレスポンシブ */
+@media (max-width: 500px) {
+
+    .modal-content input,
+    .modal-content textarea {
+        font-size: 0.95rem;
+        padding: 0.3rem;
+    }
+}
