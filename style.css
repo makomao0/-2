@@ -258,18 +258,7 @@ main>section.active {
 }
 
 /* 星エフェクトの基本設定 */
-.shooting-star {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 2px;
-    height: 2px;
-    background: #ffd700;
-    border-radius: 50%;
-    box-shadow: 0 0 6px #ffd700, 0 0 12px #ffd700;
-    animation: shoot 1.5s linear forwards;
-    z-index: 10000;
-}
+
 
 @keyframes shoot {
     0% {
