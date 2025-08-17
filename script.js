@@ -57,11 +57,11 @@ function updateFileSelect() {
 
 function getStampImgTag(stamp) {
     const map = {
-        '💘': 'img/猫.PNG',
-        '😭': 'img/猫2 のコピー.png',
-        '💧': 'img/猫3 のコピー.png',
-        '😲': 'img/猫4 のコピー.png',
-        '😴': 'img/猫56psd のコピー.png'
+        '💘': '猫.PNG',
+        '😭': '猫2 のコピー.png',
+        '💧': '猫3 のコピー.png',
+        '😲': '猫4 のコピー.png',
+        '😴': '猫56psd のコピー.png'
     };
     if (!stamp || !map[stamp]) return '';
     return `<img src="${map[stamp]}" alt="${stamp}" style="width:32px; height:auto;">`;
